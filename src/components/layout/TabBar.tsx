@@ -1,3 +1,4 @@
+import React from 'react';
 import type { TabId } from '../../types';
 
 interface Props {
@@ -42,7 +43,7 @@ function GearIcon() {
   );
 }
 
-const tabs: { id: TabId; label: string; Icon: () => JSX.Element }[] = [
+const tabs: { id: TabId; label: string; Icon: () => React.ReactElement }[] = [
   { id: 'library',   label: 'Library',   Icon: BookIcon },
   { id: 'log',       label: 'Log',       Icon: PenIcon },
   { id: 'dashboard', label: 'Dashboard', Icon: ChartIcon },
