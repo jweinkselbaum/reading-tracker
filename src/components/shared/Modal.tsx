@@ -15,14 +15,25 @@ export function Modal({ title, onClose, children }: Props) {
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-5 border-b border-gray-100">
-          <h2 className="text-base font-semibold text-gray-900">{title}</h2>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]" onClick={onClose} />
+      <div
+        className="relative w-full sm:max-w-md max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl"
+        style={{
+          background: '#F8F5EE',
+          boxShadow: '0 -4px 32px rgba(0,0,0,0.15), 0 4px 24px rgba(0,0,0,0.1)',
+        }}
+      >
+        <div
+          className="flex items-center justify-between px-5 py-4"
+          style={{ borderBottom: '1px solid #E0D8CC' }}
+        >
+          <h2 className="text-base font-semibold text-[#1A1512]" style={{ fontFamily: 'Georgia, serif' }}>
+            {title}
+          </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl leading-none cursor-pointer"
+            className="w-7 h-7 flex items-center justify-center rounded-full text-[#9B928A] hover:text-[#1A1512] hover:bg-[#E0D8CC] transition-colors cursor-pointer text-lg leading-none"
             aria-label="Close"
           >
             ×

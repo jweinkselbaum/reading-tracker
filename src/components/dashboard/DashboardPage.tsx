@@ -8,19 +8,27 @@ interface Props {
 
 function StreakWidget({ current, best }: { current: number; best: number }) {
   return (
-    <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-5 text-white">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-indigo-200 text-sm font-medium">Physical reading streak</p>
-          <div className="flex items-end gap-2 mt-1">
-            <span className="text-5xl font-bold">{current}</span>
-            <span className="text-indigo-200 mb-1.5">day{current !== 1 ? 's' : ''}</span>
-          </div>
+    <div
+      className="rounded-2xl p-5 text-white"
+      style={{
+        background: 'linear-gradient(145deg, #3A6127 0%, #2C4A1E 60%, #1E3314 100%)',
+        boxShadow: '0 4px 16px rgba(44,74,30,0.3), 0 2px 6px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.08)',
+      }}
+    >
+      <p className="text-xs font-semibold tracking-widest uppercase text-green-200/70 mb-2">Physical reading streak</p>
+      <div className="flex items-end justify-between">
+        <div className="flex items-baseline gap-2">
+          <span className="text-6xl font-bold tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>{current}</span>
+          <span className="text-green-200/70 text-lg mb-1">{current === 1 ? 'day' : 'days'}</span>
         </div>
-        <div className="text-5xl">🔥</div>
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.25" className="mb-1">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          <line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/>
+        </svg>
       </div>
       {best > 0 && (
-        <p className="text-indigo-200 text-xs mt-3">Best streak: {best} day{best !== 1 ? 's' : ''}</p>
+        <p className="text-green-200/50 text-xs mt-3 tracking-wide">Best: {best} {best === 1 ? 'day' : 'days'}</p>
       )}
     </div>
   );
@@ -28,10 +36,17 @@ function StreakWidget({ current, best }: { current: number; best: number }) {
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-4">
-      <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{label}</p>
-      <p className="text-2xl font-bold text-gray-900 mt-1">{value}</p>
-      {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+    <div
+      className="rounded-xl p-4"
+      style={{
+        background: '#FDFAF5',
+        border: '1px solid #E0D8CC',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)',
+      }}
+    >
+      <p className="text-xs font-bold text-[#9B928A] uppercase tracking-widest">{label}</p>
+      <p className="text-3xl font-bold text-[#1A1512] mt-1.5 tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>{value}</p>
+      {sub && <p className="text-xs text-[#B0A89E] mt-0.5">{sub}</p>}
     </div>
   );
 }
@@ -43,18 +58,27 @@ function BarChart({ physicalVal, digitalVal, label }: { physicalVal: number; dig
 
   return (
     <div>
-      <p className="text-xs text-gray-500 mb-1.5">{label}</p>
-      <div className="flex rounded-full overflow-hidden h-3 bg-gray-100">
+      <p className="text-xs font-semibold text-[#6B6059] uppercase tracking-wide mb-2">{label}</p>
+      <div
+        className="flex rounded-md overflow-hidden h-2.5"
+        style={{ background: '#E0D8CC', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.12)' }}
+      >
         {physPct > 0 && (
-          <div className="bg-green-500 transition-all" style={{ width: `${physPct}%` }} />
+          <div
+            className="transition-all"
+            style={{ width: `${physPct}%`, background: 'linear-gradient(90deg, #3A6127, #2C4A1E)' }}
+          />
         )}
         {digPct > 0 && (
-          <div className="bg-blue-400 transition-all" style={{ width: `${digPct}%` }} />
+          <div
+            className="transition-all"
+            style={{ width: `${digPct}%`, background: 'linear-gradient(90deg, #4A7A9B, #2A5A7E)' }}
+          />
         )}
       </div>
-      <div className="flex justify-between text-xs text-gray-400 mt-1">
-        <span>📖 {physicalVal} physical ({physPct}%)</span>
-        <span>📱 {digitalVal} digital</span>
+      <div className="flex justify-between text-xs text-[#9B928A] mt-1.5">
+        <span style={{ color: '#2C4A1E' }}>{physicalVal} physical ({physPct}%)</span>
+        <span style={{ color: '#2A5A7E' }}>{digitalVal} digital</span>
       </div>
     </div>
   );
@@ -67,17 +91,22 @@ export function DashboardPage({ log }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-4 pt-5 pb-3">
-        <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
+      <div className="px-5 pt-6 pb-4">
+        <h1 className="text-2xl font-bold text-[#1A1512]" style={{ fontFamily: 'Georgia, serif' }}>Dashboard</h1>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-24 flex flex-col gap-4">
+      <div className="flex-1 overflow-y-auto px-5 pb-24 flex flex-col gap-4">
         {showNudge && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex gap-3 items-start">
-            <span className="text-2xl">🌿</span>
+          <div
+            className="rounded-xl p-4 flex gap-3 items-start"
+            style={{ background: '#FBF5E6', border: '1px solid #E8D9B0', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B6914" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
             <div>
-              <p className="text-sm font-semibold text-amber-800">Mostly digital this week</p>
-              <p className="text-xs text-amber-600 mt-0.5">Only {stats.weekPhysicalPct}% of your sessions were physical. Try picking up a book or magazine today!</p>
+              <p className="text-sm font-semibold text-[#6B4C0A]">Mostly digital this week</p>
+              <p className="text-xs text-[#8B6914] mt-0.5">Only {stats.weekPhysicalPct}% of your sessions were physical. Try picking up a book or magazine today.</p>
             </div>
           </div>
         )}
@@ -92,25 +121,26 @@ export function DashboardPage({ log }: Props) {
         </div>
 
         {log.entries.length > 0 && (
-          <div className="bg-white rounded-2xl border border-gray-100 p-4 flex flex-col gap-4">
-            <p className="text-sm font-semibold text-gray-700">This week</p>
-            <BarChart
-              physicalVal={stats.physicalPages}
-              digitalVal={stats.digitalPages}
-              label="Pages"
-            />
-            <BarChart
-              physicalVal={stats.physicalArticles}
-              digitalVal={stats.digitalArticles}
-              label="Articles"
-            />
+          <div
+            className="rounded-2xl p-4 flex flex-col gap-4"
+            style={{ background: '#FDFAF5', border: '1px solid #E0D8CC', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
+          >
+            <p className="text-xs font-bold text-[#9B928A] uppercase tracking-widest">This week</p>
+            <BarChart physicalVal={stats.physicalPages} digitalVal={stats.digitalPages} label="Pages" />
+            <BarChart physicalVal={stats.physicalArticles} digitalVal={stats.digitalArticles} label="Articles" />
           </div>
         )}
 
         {log.entries.length === 0 && (
-          <div className="text-center py-12 text-gray-400">
-            <div className="text-5xl mb-3">📊</div>
-            <p className="text-sm">Log some reading sessions to see stats</p>
+          <div className="text-center py-12 text-[#9B928A]">
+            <div className="w-10 h-10 mx-auto mb-3 opacity-25">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25">
+                <rect x="3" y="12" width="4" height="9" rx="1"/>
+                <rect x="10" y="7" width="4" height="14" rx="1"/>
+                <rect x="17" y="3" width="4" height="18" rx="1"/>
+              </svg>
+            </div>
+            <p className="text-sm">Log some sessions to see your stats</p>
           </div>
         )}
       </div>

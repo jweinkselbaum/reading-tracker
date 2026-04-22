@@ -23,8 +23,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-lg mx-auto min-h-screen bg-gray-50 relative">
+    <div className="min-h-screen" style={{ background: '#EDE8DF' }}>
+      <div className="max-w-lg mx-auto min-h-screen relative" style={{ background: '#EDE8DF' }}>
         {tab === 'library' && <LibraryPage library={library} />}
         {tab === 'log' && <LogPage library={library} log={log} />}
         {tab === 'dashboard' && <DashboardPage log={log} />}

@@ -8,4 +8,9 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  background-color: #EDE8DF;
+}
+
+h1, h2, h3 {
+  font-family: Georgia, 'Times New Roman', serif;
 }

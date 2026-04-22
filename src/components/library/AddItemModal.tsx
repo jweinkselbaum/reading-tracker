@@ -12,11 +12,59 @@ interface Props {
   library: ReturnType<typeof useLibrary>;
 }
 
+function TypeToggle({ value, onChange }: { value: 'book' | 'magazine'; onChange: (v: 'book' | 'magazine') => void }) {
+  return (
+    <div
+      className="flex rounded-lg p-0.5 mb-4"
+      style={{ background: '#E0D8CC', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.12)' }}
+    >
+      {(['book', 'magazine'] as const).map(t => (
+        <button
+          key={t}
+          onClick={() => onChange(t)}
+          className="flex-1 py-2 rounded-md text-sm font-medium transition-all cursor-pointer capitalize"
+          style={value === t
+            ? { background: '#F8F5EE', color: '#1A1512', boxShadow: '0 1px 3px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.8)' }
+            : { color: '#6B6059', background: 'transparent' }
+          }
+        >
+          {t === 'book' ? 'Book' : 'Magazine'}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function MediumToggle({ value, onChange }: { value: 'physical' | 'digital'; onChange: (v: 'physical' | 'digital') => void }) {
+  return (
+    <div className="mb-5">
+      <p className="text-xs font-semibold tracking-wide uppercase text-[#6B6059] mb-1.5">Medium</p>
+      <div
+        className="flex rounded-lg p-0.5"
+        style={{ background: '#E0D8CC', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.12)' }}
+      >
+        {(['physical', 'digital'] as const).map(m => (
+          <button
+            key={m}
+            onClick={() => onChange(m)}
+            className="flex-1 py-2 rounded-md text-sm font-medium transition-all cursor-pointer capitalize"
+            style={value === m
+              ? { background: '#2C4A1E', color: '#FFFFFF', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }
+              : { color: '#6B6059', background: 'transparent' }
+            }
+          >
+            {m}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function AddItemModal({ onClose, library }: Props) {
   const [itemType, setItemType] = useState<'book' | 'magazine'>('book');
   const [medium, setMedium] = useState<'physical' | 'digital'>('physical');
   const [errors, setErrors] = useState<Record<string, string>>({});
-
   const [bookForm, setBookForm] = useState({ title: '', author: '', category: 'Fiction', totalPages: '' });
   const [magForm, setMagForm] = useState({ title: '', publisher: '', issueNumber: '' });
 
@@ -46,33 +94,8 @@ export function AddItemModal({ onClose, library }: Props) {
 
   return (
     <Modal title="Add to library" onClose={onClose}>
-      <div className="flex gap-2 mb-5">
-        {(['book', 'magazine'] as const).map(t => (
-          <button
-            key={t}
-            onClick={() => setItemType(t)}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors cursor-pointer capitalize ${
-              itemType === t ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-600 border-gray-300 hover:border-indigo-400'
-            }`}
-          >
-            {t === 'book' ? '📕' : '📰'} {t}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex gap-2 mb-5">
-        {(['physical', 'digital'] as const).map(m => (
-          <button
-            key={m}
-            onClick={() => setMedium(m)}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors cursor-pointer capitalize ${
-              medium === m ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-300 hover:border-green-400'
-            }`}
-          >
-            {m === 'physical' ? '📖' : '📱'} {m}
-          </button>
-        ))}
-      </div>
+      <TypeToggle value={itemType} onChange={setItemType} />
+      <MediumToggle value={medium} onChange={setMedium} />
 
       <div className="flex flex-col gap-3">
         {itemType === 'book' ? (
