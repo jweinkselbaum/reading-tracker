@@ -77,9 +77,7 @@ function ItemPicker({ items, value, onChange }: { items: LibraryItem[]; value: s
                 <MediumBadge medium={item.medium} />
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-[#1A1512] truncate">{item.title}</p>
-                  <p className="text-xs text-[#9B928A]">
-                    {item.type === 'book' ? item.author : item.publisher}
-                  </p>
+                  <p className="text-xs text-[#9B928A]">{item.type === 'book' ? item.author : item.publisher}</p>
                 </div>
               </div>
             ))}
@@ -91,37 +89,38 @@ function ItemPicker({ items, value, onChange }: { items: LibraryItem[]; value: s
 }
 
 function RecentLogs({ log, library }: { log: ReturnType<typeof useReadingLog>; library: ReturnType<typeof useLibrary> }) {
-  const recent = log.entries.slice(0, 10);
-  if (recent.length === 0) return null;
+  const recent = log.entries.slice(0, 20);
+  if (recent.length === 0) return (
+    <div className="text-center py-12 text-[#9B928A]">
+      <p className="text-sm">No sessions logged yet</p>
+    </div>
+  );
 
   return (
-    <div className="mt-6">
-      <h2 className="text-xs font-bold text-[#9B928A] uppercase tracking-widest mb-3">Recent sessions</h2>
-      <div className="flex flex-col gap-2">
-        {recent.map(entry => {
-          const item = library.items.find(i => i.id === entry.itemId);
-          const amount = entry.pagesRead != null ? `${entry.pagesRead} pages` : `${entry.articlesRead ?? 0} articles`;
-          return (
-            <div
-              key={entry.id}
-              className="flex items-center justify-between gap-3 p-3.5 rounded-xl"
-              style={{ background: '#FDFAF5', border: '1px solid #E0D8CC', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
-            >
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-[#1A1512] truncate" style={{ fontFamily: 'Georgia, serif' }}>{item?.title ?? 'Unknown'}</p>
-                <p className="text-xs text-[#9B928A] mt-0.5">{formatDate(entry.date)} · {amount}</p>
-                <div className="mt-1.5"><MediumBadge medium={entry.medium} /></div>
-              </div>
-              <button onClick={() => log.removeEntry(entry.id)} className="text-[#C5BFBA] hover:text-[#8B2220] text-xl cursor-pointer leading-none transition-colors" aria-label="Delete">×</button>
+    <div className="flex flex-col gap-2">
+      {recent.map(entry => {
+        const item = library.items.find(i => i.id === entry.itemId);
+        const amount = entry.pagesRead != null ? `${entry.pagesRead} pages` : `${entry.articlesRead ?? 0} articles`;
+        return (
+          <div
+            key={entry.id}
+            className="flex items-center justify-between gap-3 p-3.5 rounded-xl"
+            style={{ background: '#FDFAF5', border: '1px solid #E0D8CC', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
+          >
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-[#1A1512] truncate" style={{ fontFamily: 'Georgia, serif' }}>{item?.title ?? 'Unknown'}</p>
+              <p className="text-xs text-[#9B928A] mt-0.5">{formatDate(entry.date)} · {amount}</p>
+              <div className="mt-1.5"><MediumBadge medium={entry.medium} /></div>
             </div>
-          );
-        })}
-      </div>
+            <button onClick={() => log.removeEntry(entry.id)} className="text-[#C5BFBA] hover:text-[#8B2220] text-xl cursor-pointer leading-none transition-colors" aria-label="Delete">×</button>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-export function LogPage({ library, log }: Props) {
+function LogForm({ library, log }: Props) {
   const [itemId, setItemId] = useState('');
   const [amount, setAmount] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -141,46 +140,65 @@ export function LogPage({ library, log }: Props) {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="px-5 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-[#1A1512]" style={{ fontFamily: 'Georgia, serif' }}>Log reading</h1>
+    <div
+      className="rounded-2xl p-5 flex flex-col gap-3"
+      style={{ background: '#FDFAF5', border: '1px solid #E0D8CC', boxShadow: '0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)' }}
+    >
+      <ItemPicker items={library.items} value={itemId} onChange={setItemId} />
+      {errors.item && <p className="text-xs text-[#8B2220] -mt-1">{errors.item}</p>}
+      <Input
+        label={selectedItem?.type === 'magazine' ? 'Articles read' : 'Pages read'}
+        type="number"
+        min="1"
+        value={amount}
+        onChange={e => setAmount(e.target.value)}
+        error={errors.amount}
+        placeholder={selectedItem?.type === 'magazine' ? 'e.g. 3' : 'e.g. 30'}
+      />
+      <Button className="w-full justify-center" onClick={handleLog}>Log session</Button>
+    </div>
+  );
+}
+
+export function LogPage({ library, log }: Props) {
+  if (library.items.length === 0) {
+    return (
+      <div className="px-5 md:px-8 pt-6 pb-24 md:pb-8">
+        <h1 className="text-2xl font-bold text-[#1A1512] mb-6" style={{ fontFamily: 'Georgia, serif' }}>Log reading</h1>
+        <div className="text-center py-16 text-[#9B928A]">
+          <div className="w-10 h-10 mx-auto mb-3 opacity-25">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25">
+              <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+          </div>
+          <p className="text-sm">Add items to your library first</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-5 md:px-8 pt-6 pb-24 md:pb-8">
+      <h1 className="text-2xl font-bold text-[#1A1512] mb-5" style={{ fontFamily: 'Georgia, serif' }}>Log reading</h1>
+
+      {/* Mobile: stacked */}
+      <div className="md:hidden flex flex-col gap-4">
+        <LogForm library={library} log={log} />
+        <div className="mt-2">
+          <h2 className="text-xs font-bold text-[#9B928A] uppercase tracking-widest mb-3">Recent sessions</h2>
+          <RecentLogs log={log} library={library} />
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-24">
-        {library.items.length === 0 ? (
-          <div className="text-center py-16 text-[#9B928A]">
-            <div className="w-10 h-10 mx-auto mb-3 opacity-25">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25">
-                <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-              </svg>
-            </div>
-            <p className="text-sm">Add items to your library first</p>
-          </div>
-        ) : (
-          <>
-            <div
-              className="rounded-2xl p-4 flex flex-col gap-3"
-              style={{ background: '#FDFAF5', border: '1px solid #E0D8CC', boxShadow: '0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)' }}
-            >
-              <ItemPicker items={library.items} value={itemId} onChange={setItemId} />
-              {errors.item && <p className="text-xs text-[#8B2220] -mt-1">{errors.item}</p>}
-
-              <Input
-                label={selectedItem?.type === 'magazine' ? 'Articles read' : 'Pages read'}
-                type="number"
-                min="1"
-                value={amount}
-                onChange={e => setAmount(e.target.value)}
-                error={errors.amount}
-                placeholder={selectedItem?.type === 'magazine' ? 'e.g. 3' : 'e.g. 30'}
-              />
-
-              <Button className="w-full justify-center" onClick={handleLog}>Log session</Button>
-            </div>
-
-            <RecentLogs log={log} library={library} />
-          </>
-        )}
+      {/* Desktop: side by side */}
+      <div className="hidden md:grid md:grid-cols-[400px_1fr] md:gap-8 md:items-start">
+        <div>
+          <LogForm library={library} log={log} />
+        </div>
+        <div>
+          <h2 className="text-xs font-bold text-[#9B928A] uppercase tracking-widest mb-3">Recent sessions</h2>
+          <RecentLogs log={log} library={library} />
+        </div>
       </div>
     </div>
   );

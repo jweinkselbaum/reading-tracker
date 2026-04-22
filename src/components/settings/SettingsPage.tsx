@@ -27,12 +27,10 @@ export function SettingsPage({ notifications, onClearData }: Props) {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="px-5 pt-6 pb-4">
-        <h1 className="text-2xl font-bold text-[#1A1512]" style={{ fontFamily: 'Georgia, serif' }}>Settings</h1>
-      </div>
+    <div className="px-5 md:px-8 pt-6 pb-24 md:pb-8 max-w-xl">
+      <h1 className="text-2xl font-bold text-[#1A1512] mb-5" style={{ fontFamily: 'Georgia, serif' }}>Settings</h1>
 
-      <div className="flex-1 overflow-y-auto px-5 pb-24 flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
         <div className="rounded-2xl p-4" style={sectionStyle}>
           <div className="flex items-center justify-between">
             <div>
