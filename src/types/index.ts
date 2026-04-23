@@ -12,12 +12,15 @@ export interface Book extends BaseLibraryItem {
   author: string;
   category: string;
   totalPages: number;
+  coverUrl?: string;
+  openLibraryKey?: string;
 }
 
 export interface Magazine extends BaseLibraryItem {
   type: 'magazine';
   publisher: string;
   issueNumber: string;
+  coverUrl?: string;
 }
 
 export type LibraryItem = Book | Magazine;
