@@ -29,7 +29,7 @@ export default function App() {
       <div className="flex-1 md:overflow-y-auto">
         {tab === 'library'   && <LibraryPage library={library} />}
         {tab === 'log'       && <LogPage library={library} log={log} />}
-        {tab === 'dashboard' && <DashboardPage log={log} />}
+        {tab === 'dashboard' && <DashboardPage log={log} library={library} />}
         {tab === 'settings'  && <SettingsPage notifications={notifications} onClearData={handleClearData} />}
         <TabBar active={tab} onChange={setTab} />
       </div>

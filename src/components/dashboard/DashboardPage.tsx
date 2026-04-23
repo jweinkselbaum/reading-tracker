@@ -1,9 +1,12 @@
 import { useStreak } from '../../hooks/useStreak';
 import { useStats } from '../../hooks/useStats';
 import { useReadingLog } from '../../hooks/useReadingLog';
+import { useLibrary } from '../../hooks/useLibrary';
+import { BookShelf } from '../library/BookShelf';
 
 interface Props {
   log: ReturnType<typeof useReadingLog>;
+  library: ReturnType<typeof useLibrary>;
 }
 
 function StreakWidget({ current, best }: { current: number; best: number }) {
@@ -74,7 +77,7 @@ function BarChart({ physicalVal, digitalVal, label }: { physicalVal: number; dig
   );
 }
 
-export function DashboardPage({ log }: Props) {
+export function DashboardPage({ log, library }: Props) {
   const { current, best } = useStreak(log.entries);
   const stats = useStats(log.entries);
   const showNudge = log.entries.length > 0 && stats.weekPhysicalPct < 50;
@@ -82,6 +85,8 @@ export function DashboardPage({ log }: Props) {
   return (
     <div className="px-5 md:px-8 pt-6 pb-24 md:pb-8 max-w-4xl">
       <h1 className="text-2xl font-bold text-[#1A1512] mb-5" style={{ fontFamily: 'Georgia, serif' }}>Dashboard</h1>
+
+      <BookShelf items={library.items} />
 
       {showNudge && (
         <div

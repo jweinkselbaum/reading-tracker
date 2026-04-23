@@ -3,7 +3,6 @@ import type { Book, Magazine } from '../../types';
 import { Button } from '../shared/Button';
 import { MediumBadge } from '../shared/MediumBadge';
 import { AddItemModal } from './AddItemModal';
-import { BookShelf } from './BookShelf';
 import { useLibrary } from '../../hooks/useLibrary';
 import { groupBy } from '../../utils/groupBy';
 
@@ -104,8 +103,6 @@ export function LibraryPage({ library }: Props) {
         <h1 className="text-2xl font-bold text-[#1A1512]" style={{ fontFamily: 'Georgia, serif' }}>Library</h1>
         <Button size="sm" onClick={() => setShowAdd(true)}>+ Add item</Button>
       </div>
-
-      <BookShelf items={library.items} />
 
       {/* Mobile tab switcher */}
       <div
